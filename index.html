@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Formación GECAD - FeSMC-UGT</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Banner Superior -->
+    <header class="header-banner">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-ugt">UGT</div>
+                <div class="header-title">
+                    <h1>CALENDARIO DE FORMACIÓN GECAD</h1>
+                    <p class="subtitle">FeSMC-UGT</p>
+                </div>
+            </div>
+            <div class="year-section">
+                <label for="year-select">Año:</label>
+                <select id="year-select">
+                    <option value="2024">2024</option>
+                    <option value="2025">2025</option>
+                    <option value="2026" selected>2026</option>
+                    <option value="2027">2027</option>
+                    <option value="2028">2028</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <!-- Panel Lateral -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📋 Cursos Programados</h2>
+                <div class="header-buttons">
+                    <button id="import-btn" class="btn-secondary" title="Importar desde Google Calendar">📥 Importar</button>
+                    <button id="export-btn" class="btn-secondary" title="Exportar calendario">💾 Exportar</button>
+                </div>
+            </div>
+            
+            <!-- Input oculto para archivo CSV o ICS -->
+            <input type="file" id="csv-file-input" accept=".csv,.ics,.ical" style="display: none;">
+
+            <!-- Leyenda de Colores -->
+            <div class="legend-section">
+                <h3>Niveles de Formación</h3>
+                <div class="legend-items">
+                    <div class="legend-item" data-level="iniciacion">
+                        <span class="color-box iniciacion"></span>
+                        <span>Iniciación</span>
+                    </div>
+                    <div class="legend-item" data-level="medio">
+                        <span class="color-box medio"></span>
+                        <span>Medio</span>
+                    </div>
+                    <div class="legend-item" data-level="avanzado">
+                        <span class="color-box avanzado"></span>
+                        <span>Avanzado</span>
+                    </div>
+                    <div class="legend-item" data-level="tematico">
+                        <span class="color-box tematico"></span>
+                        <span>Temático</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filtros -->
+            <div class="filter-section">
+                <h3>Filtrar por Nivel</h3>
+                <select id="filter-level">
+                    <option value="todos">Todos los niveles</option>
+                    <option value="iniciacion">Iniciación</option>
+                    <option value="medio">Medio</option>
+                    <option value="avanzado">Avanzado</option>
+                    <option value="tematico">Temático</option>
+                </select>
+            </div>
+
+            <!-- Lista de Cursos -->
+            <div class="courses-list" id="courses-list">
+                <p class="empty-message">No hay cursos programados aún. Haz clic en cualquier día del calendario para añadir uno.</p>
+            </div>
+        </aside>
+
+        <!-- Calendario de 12 Meses -->
+        <section class="calendar-section">
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- Los meses se generarán dinámicamente con JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal para Añadir/Editar Curso -->
+    <div id="course-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Añadir Curso</h2>
+                <button class="close-btn" id="close-modal">&times;</button>
+            </div>
+            <form id="course-form">
+                <input type="hidden" id="course-id">
+                
+                <div class="form-group">
+                    <label for="course-name">Nombre del Curso *</label>
+                    <input type="text" id="course-name" required placeholder="Ej: Negociación Colectiva">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="start-date">Fecha Inicio *</label>
+                        <input type="date" id="start-date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="end-date">Fecha Fin *</label>
+                        <input type="date" id="end-date" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="course-location">Lugar/Sede *</label>
+                    <input type="text" id="course-location" required placeholder="Ej: Sede UGT Madrid">
+                </div>
+
+                <div class="form-group">
+                    <label for="course-city">Ciudad *</label>
+                    <input type="text" id="course-city" required placeholder="Ej: Madrid">
+                </div>
+
+                <div class="form-group">
+                    <label for="course-level">Nivel *</label>
+                    <select id="course-level" required>
+                        <option value="">-- Selecciona nivel --</option>
+                        <option value="iniciacion">Iniciación</option>
+                        <option value="medio">Medio</option>
+                        <option value="avanzado">Avanzado</option>
+                        <option value="tematico">Temático</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="course-instructor">Formador/es</label>
+                    <input type="text" id="course-instructor" placeholder="Opcional">
+                </div>
+
+                <div class="form-group">
+                    <label for="course-notes">Observaciones</label>
+                    <textarea id="course-notes" rows="3" placeholder="Notas adicionales (opcional)"></textarea>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" id="cancel-btn">Cancelar</button>
+                    <button type="button" class="btn-danger" id="delete-btn" style="display: none;">Eliminar</button>
+                    <button type="submit" class="btn-primary">Guardar Curso</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/calendar.js"></script>
+</body>
+</html>
